@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
 require("dotenv").config({});
 import { app } from "./app";
+import { dbConnection } from "./database/connection";
 
 const start = async () => {
   console.log("starting up...");
@@ -9,13 +9,9 @@ const start = async () => {
   }
 
   try {
-    await mongoose.connect(process.env!.MONGODB_URI!, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useCreateIndex: true,
-    });
+    dbConnection.connect();
 
-    console.log("connected to mongodb");
+    console.log("connected to mysql");
   } catch (err) {
     console.log(err);
   }

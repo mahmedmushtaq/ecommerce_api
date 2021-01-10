@@ -21,24 +21,24 @@ router.post(
   async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.body;
 
-    const existingUser = await User.findOne({ email });
+    // const existingUser = await User.findOne({ email });
 
-    if (existingUser) {
-      throw new BadRequestError("Email already in use");
-    }
+    // if (existingUser) {
+    //   throw new BadRequestError("Email already in use");
+    // }
 
-    const user = User.build({ email, password });
-    await user.save();
+    // const user = User.build({ email, password });
+    // await user.save();
 
-    // generate jwt
+    // // generate jwt
 
-    const userJwt = jwt.sign(
-      {
-        id: user.id,
-        email: user.email,
-      },
-      process.env.JWT_KEY!
-    );
+    // const userJwt = jwt.sign(
+    //   {
+    //     id: user.id,
+    //     email: user.email,
+    //   },
+    //   process.env.JWT_KEY!
+    // );
 
     // send response
   }

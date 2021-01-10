@@ -22,28 +22,28 @@ router.post(
   async (req: Request, res: Response) => {
     const { email, password } = req.body;
 
-    const existingUser = await User.findOne({ email });
-    if (!existingUser) {
-      throw new BadRequestError("Invalid credentials");
-    }
+    // const existingUser = await User.findOne({ email });
+    // if (!existingUser) {
+    //   throw new BadRequestError("Invalid credentials");
+    // }
 
-    const passwordMatch = await Password.compare(
-      existingUser.password,
-      password
-    );
-    if (!passwordMatch) {
-      throw new BadRequestError("Invalid credentials");
-    }
+    // const passwordMatch = await Password.compare(
+    //   existingUser.password,
+    //   password
+    // );
+    // if (!passwordMatch) {
+    //   throw new BadRequestError("Invalid credentials");
+    // }
 
-    // generate jwt
+    // // generate jwt
 
-    const userJwt = jwt.sign(
-      {
-        id: existingUser.id,
-        email: existingUser.email,
-      },
-      process.env.JWT_KEY!
-    );
+    // const userJwt = jwt.sign(
+    //   {
+    //     id: existingUser.id,
+    //     email: existingUser.email,
+    //   },
+    //   process.env.JWT_KEY!
+    // );
 
     // send response
   }
