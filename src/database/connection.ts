@@ -23,6 +23,3 @@ class Connection {
 }
 
 export const dbConnection = new Connection();
-
-const connection = dbConnection.connect;
-export default connection;

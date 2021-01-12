@@ -1,16 +1,14 @@
 import express, { Request, Response } from "express";
 import { body } from "express-validator";
-import { BadRequestError } from "../errors";
-import { validateRequest } from "../middlewares";
-import { User } from "../models/user";
-
-import { Password } from "../services/password";
-import jwt from "jsonwebtoken";
+import { BadRequestError } from "../../errors";
+import { validateRequest } from "../../middlewares";
+import { JWT } from "../../services";
+import { user } from "../../utils/user";
 
 const router = express.Router();
 
 router.post(
-  "/api/users/signin",
+  "/signin",
   [
     body("email").isEmail().withMessage("Email must be valid"),
     body("password")
@@ -21,6 +19,30 @@ router.post(
   validateRequest,
   async (req: Request, res: Response) => {
     const { email, password } = req.body;
+
+    // try {
+    const authenticate = await user.authenticate({ email, password });
+
+    if (!authenticate) {
+      throw new BadRequestError("Invalid credentials");
+    }
+
+    const userJwt = await JWT.generateJWt({
+      id: authenticate.id,
+      email: authenticate.email,
+      //@ts-ignore
+      accountType: authenticate.accountType,
+    });
+
+    res.send({
+      full_name: authenticate.full_name,
+      email,
+      id: authenticate.id,
+      token: userJwt,
+    });
+    // } catch (err) {
+    //   throw new BadRequestError(err);
+    // }
 
     // const existingUser = await User.findOne({ email });
     // if (!existingUser) {
@@ -49,4 +71,4 @@ router.post(
   }
 );
 
-export { router as signInRouter };
+export default router;

@@ -3,15 +3,13 @@ import { app } from "./app";
 import { dbConnection } from "./database/connection";
 
 const start = async () => {
-  console.log("starting up...");
   if (!process.env!.JWT_SECRET!) {
     throw new Error("JWT key must be valid");
   }
 
   try {
-    dbConnection.connect();
-
-    console.log("connected to mysql");
+    await dbConnection.connect();
+    console.log("mysql is connected");
   } catch (err) {
     console.log(err);
   }

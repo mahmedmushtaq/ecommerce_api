@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { JWT } from "../classes";
-import { UserPayload } from "./../classes/jwt";
-
+import { JWT } from "../services";
+import { UserPayload } from "../services/jwt";
 
 declare global {
   namespace Express {

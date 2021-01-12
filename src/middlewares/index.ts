@@ -1,4 +1,4 @@
-export { requireAuth } from "./require-auth";
+export { requireAuth } from "./requireAuth";
 export { validateRequest } from "./validate-request";
-export { errorHandler } from "./error-handler";
-export { currentUser } from "./current-user";
+export { errorHandler } from "./errorHandler";
+export { currentUser } from "./currentUser";

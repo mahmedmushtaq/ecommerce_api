@@ -3,17 +3,18 @@ import jwt from "jsonwebtoken";
 export interface UserPayload {
   id: string;
   email: string;
-  userType?: "connected_player";
+  accountType: "user" | "admin" | "seller";
 }
 
 class JWT {
   constructor() {}
 
-  async generateJWt({ id, email }: UserPayload) {
+  async generateJWt({ id, email, accountType }: UserPayload) {
     const signJWT = await jwt.sign(
       {
         id,
         email,
+        accountType,
       },
       process.env!.JWT_SECRET!
     );
