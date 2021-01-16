@@ -18,9 +18,13 @@
     "express-validator": "^6.8.0",
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.2.5",
+    "randomstring": "^1.1.5",
+    "slug": "^4.0.2",
     "ts-node-dev": "^1.1.1"
   },
   "devDependencies": {
-    "@types/mysql2": "github:types/mysql2"
+    "@types/mysql2": "github:types/mysql2",
+    "@types/randomstring": "^1.1.6",
+    "@types/slug": "^0.9.1"
   }
 }

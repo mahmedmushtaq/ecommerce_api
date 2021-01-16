@@ -1,6 +1,6 @@
 import express, { Request, Response, NextFunction } from "express";
 import { body } from "express-validator";
-import { user } from "../../utils/user";
+import { user } from "../../controllers/user/User";
 import { JWT } from "../../services";
 import { BadRequestError } from "../../errors";
 import { validateRequest } from "../../middlewares";

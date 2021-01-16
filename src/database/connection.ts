@@ -1,8 +1,10 @@
 import mysql, { Connection as MySqlConnection } from "mysql2/promise";
-class Connection {
+export class Connection {
   // private
   private _con?: MySqlConnection;
-  constructor() {}
+  constructor() {
+    this.connect();
+  }
 
   async connect() {
     try {
@@ -12,14 +14,18 @@ class Connection {
         password: process.env!.DB_PASSWORD,
         database: process.env!.DB_NAME,
       });
+      console.log("connected to mysql");
     } catch (e) {
       console.error(e);
     }
   }
+
+  async connectMySql() {}
 
   get connection() {
     return this._con;
   }
 }
 
-export const dbConnection = new Connection();
+const dbConnection = new Connection();
+export { dbConnection };

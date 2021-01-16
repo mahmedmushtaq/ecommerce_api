@@ -3,7 +3,7 @@ import { body } from "express-validator";
 import { BadRequestError } from "../../errors";
 import { validateRequest } from "../../middlewares";
 import { JWT } from "../../services";
-import { user } from "../../utils/user";
+import { user } from "../../controllers/user/User";
 
 const router = express.Router();
 
@@ -38,6 +38,7 @@ router.post(
       full_name: authenticate.full_name,
       email,
       id: authenticate.id,
+      accountType: authenticate.accountType,
       token: userJwt,
     });
     // } catch (err) {

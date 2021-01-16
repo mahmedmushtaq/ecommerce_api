@@ -1,9 +1,12 @@
-import { Password } from "../services/password";
-import { dbConnection as db } from "../database/connection";
-import { BadRequestError } from "../errors";
+import { Password } from "../../services/password";
+import { BadRequestError, InternalServerError } from "../../errors";
+import { userType } from "./UserType";
+import BaseController from "../BaseControllers";
 
-class User {
-  constructor() {}
+class User extends BaseController {
+  constructor() {
+    super();
+  }
 
   async addNewUser(data: { name: string; email: string; password: string }) {
     const hashedPassword = await Password.toHash(data.password);
@@ -11,21 +14,21 @@ class User {
     try {
       const [
         rows,
-      ]: any = await db.connection!.execute(
+      ]: any = await this.connection!.execute(
         "INSERT INTO users(name,email,password) VALUES (?,?,?)",
         [data.name, data.email, hashedPassword]
       );
 
       return { id: rows.insertId };
     } catch (err) {
-      throw new BadRequestError(err);
+      throw new InternalServerError(err);
     }
   }
 
   async authenticate(data: { email: string; password: string }) {
     const [
       rows,
-    ]: any = await db.connection?.execute(
+    ]: any = await this.connection!.execute(
       "Select id,email, password,name from users where email=?",
       [data.email]
     );
@@ -41,14 +44,15 @@ class User {
       return undefined;
     }
 
-    const rowData:any = rows[0];
+    const rowData: any = rows[0];
+    const accountType = await userType.type(rowData.id);
 
     // also get account the type by checking into the seller and admin table
     return {
       id: rowData.id,
-      email:rowData.email,
+      email: rowData.email,
       full_name: rowData.name,
-      accountType: "user",
+      accountType,
     };
   }
 }
