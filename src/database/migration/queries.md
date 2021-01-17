@@ -1,1 +1,1 @@
-CREATE DATABASE ecommerce_project                                                                                            
+# RUN QUERIES ACCORDING TO YOUR VERSION
