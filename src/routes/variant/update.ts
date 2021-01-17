@@ -5,19 +5,20 @@ import { category, variant } from "../../controllers";
 
 const router = express.Router();
 
-router.post(
+router.put(
   "",
   requireAuth,
   [
     body("name").not().isEmpty().withMessage("variant name is required"),
     body("description").not().isEmpty().withMessage("description is required"),
+    body("variant_id").not().isEmpty().withMessage("variant_id is required"),
   ],
   validateRequest,
   requireAdmin,
   async (req: Request, res: Response) => {
-    const { name, description } = req.body;
-    const variantId = await variant.createVariant({ name, description });
-    res.send({ message: "Successfully added new variant", variantId });
+    const { name, description, variant_id } = req.body;
+    await variant.updateVariant({ name, description, id: variant_id });
+    res.send({ message: "Successfully updated the variant" });
   }
 );
 

@@ -1,6 +1,7 @@
 import { BadRequestError, InternalServerError } from "../../errors";
 import BaseController from "../BaseControllers";
 import Utils from "../../utils";
+import { store } from "../store";
 
 class StoreType extends BaseController {
   async createStoreType(data: {
@@ -17,6 +18,30 @@ class StoreType extends BaseController {
         [data.image, data.store_type, slug, data.users_id]
       );
       return rows.insertId;
+    } catch (err) {
+      throw new InternalServerError(err);
+    }
+  }
+
+  async deleteStoreType(storeTypeId: number, userId: number) {
+    // first delete product_variant record
+    // delete product_image record
+    // delete products
+    // delete stores
+    // and then delete product
+
+   
+
+    try {
+      // await this.connection!.execute(
+      //   "DELETE from store_types where id=? and users_id",
+      //   [storeTypeId, userId]
+      // );
+      await store.deleteStoresByStoreType(storeTypeId);
+      await this.connection!.execute(
+        "DELETE from store_types where id=? and users_id",
+        [storeTypeId, userId]
+      );
     } catch (err) {
       throw new InternalServerError(err);
     }

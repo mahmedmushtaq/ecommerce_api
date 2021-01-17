@@ -15,6 +15,20 @@ class Category extends BaseController {
       throw new InternalServerError(err);
     }
   }
+
+  async updateCategory(name: string, category_id: number) {
+    try {
+      const [
+        rows,
+      ]: any = await this.connection!.execute(
+        "UPDATE category set name=? where id=?",
+        [name, category_id]
+      );
+      return;
+    } catch (err) {
+      throw new InternalServerError(err);
+    }
+  }
 }
 
 const category = new Category();

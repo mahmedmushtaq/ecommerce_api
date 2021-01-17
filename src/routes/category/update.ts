@@ -5,16 +5,19 @@ import { category } from "../../controllers";
 
 const router = express.Router();
 
-router.post(
+router.put(
   "/",
-  [body("name").not().isEmpty().withMessage("name is required")],
+  [
+    body("name").not().isEmpty().withMessage("name is required"),
+    body("category_id").not().isEmpty().withMessage("category_id is required"),
+  ],
   validateRequest,
   requireAuth,
   requireAdmin,
   async (req: Request, res: Response) => {
-    const { name } = req.body;
-    await category.createCategory(name);
-    res.send({ message: "Category created successfully" });
+    const { name, category_id } = req.body;
+    await category.updateCategory(name, category_id);
+    res.send({ message: "Category updated  successfully" });
   }
 );
 

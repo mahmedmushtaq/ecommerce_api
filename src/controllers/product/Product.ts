@@ -1,6 +1,7 @@
-import { InternalServerError } from "../../errors";
+import { BadRequestError, InternalServerError } from "../../errors";
 import Utils from "../../utils";
 import BaseController from "../BaseControllers";
+import { store } from "../store";
 
 class Product extends BaseController {
   async creatProduct(data: {
@@ -13,6 +14,7 @@ class Product extends BaseController {
     variants?: number[];
   }) {
     const slug = Utils.generateSlug(data.name);
+
     try {
       const [
         rows,
@@ -104,6 +106,99 @@ class Product extends BaseController {
 
       const data = await this.productImageAndVariants(rows);
       return data;
+    } catch (err) {
+      throw new InternalServerError(err);
+    }
+  }
+
+  async highPriceProduct() {
+    try {
+      const [rows]: any = await this.connection!.execute(
+        "SELECT products.id as product_id,product_name,products.slug as product_slug,products.description as product_description,price, stores.name as store_name, stores.slug as store_slug,category.name as category_name from products left outer JOIN stores on stores.id=products.store_id left outer join category on category.id = products.category_id where products.price in (SELECT MAX(price) from products)"
+      );
+
+      const data = await this.productImageAndVariants(rows);
+      return data;
+    } catch (err) {
+      throw new InternalServerError(err);
+    }
+  }
+  async minPriceProduct() {
+    try {
+      const [rows]: any = await this.connection!.execute(
+        "SELECT products.id as product_id,product_name,products.slug as product_slug,products.description as product_description,price, stores.name as store_name, stores.slug as store_slug,category.name as category_name from products left outer JOIN stores on stores.id=products.store_id left outer join category on category.id = products.category_id where products.price in (SELECT MIN(price) from products)"
+      );
+
+      const data = await this.productImageAndVariants(rows);
+      return data;
+    } catch (err) {
+      throw new InternalServerError(err);
+    }
+  }
+
+  async deleteProductByStoreId(storeId: number) {
+    try {
+      await this.connection!.execute("DELETE FROM products where store_id=?", [
+        storeId,
+      ]);
+      return;
+    } catch (err) {
+      throw new InternalServerError(err);
+    }
+  }
+
+  async isMyProduct(userId: number, productId: number) {
+    try {
+      const [
+        row,
+      ]: any = await this.connection!.execute(
+        "SELECT id from products where id=? and store_id in (select id from stores where users_id=?)",
+        [productId, userId]
+      );
+      return row.length > 0;
+    } catch (err) {
+      throw new InternalServerError(err);
+    }
+  }
+
+  async deleteProductById(productId: number, userId: number) {
+    try {
+      // delete product_variant
+      const isMyProduct = await this.isMyProduct(userId, productId);
+      if (!isMyProduct) {
+        throw new BadRequestError("You cannot delete the other user product");
+      }
+
+      await this.connection!.execute(
+        "DELETE from product_variant Where products_id=?",
+        [productId]
+      );
+
+      await this.connection!.execute("DELETE from images where products_id=?", [
+        productId,
+      ]);
+
+      await this.connection!.execute("DELETE from products where id=?", [
+        productId,
+      ]);
+
+      return;
+    } catch (err) {
+      throw new InternalServerError(err);
+    }
+  }
+
+  async updateProductPrice(price: number, userId: number, productId: number) {
+    try {
+      console.log(userId, productId);
+      const isMyProduct = await this.isMyProduct(userId, productId);
+      if (!isMyProduct) {
+        throw new BadRequestError("You cannot update the other user product");
+      }
+      await this.connection!.execute("Update products SET price=? where id=?", [
+        price,
+        productId,
+      ]);
     } catch (err) {
       throw new InternalServerError(err);
     }

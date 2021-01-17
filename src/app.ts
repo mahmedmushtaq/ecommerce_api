@@ -8,6 +8,8 @@ import {
   categoryRouter,
   variantRouter,
   productRouter,
+  orderRouter,
+  cartRouter,
 } from "./routes";
 import { NotFoundError } from "./errors";
 import { currentUser, errorHandler } from "./middlewares";
@@ -29,6 +31,8 @@ app.use("/api/store", storeRouter);
 app.use("/api/category", categoryRouter);
 app.use("/api/variant", variantRouter);
 app.use("/api/product", productRouter);
+app.use("/api/order", orderRouter);
+app.use("/api/cart", cartRouter);
 
 app.get("/", async (req, res) => {
   res.send({ message: "welcome" });

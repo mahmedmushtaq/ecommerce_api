@@ -15,6 +15,17 @@ class Variant extends BaseController {
       throw new InternalServerError(err);
     }
   }
+
+  async updateVariant(data: { name: string; description: string; id: number }) {
+    try {
+      await this.connection!.execute(
+        "Update variant set name=?, description=? where id=?",
+        [data.name, data.description, data.id]
+      );
+    } catch (err) {
+      throw new InternalServerError(err);
+    }
+  }
 }
 
 const variant = new Variant();

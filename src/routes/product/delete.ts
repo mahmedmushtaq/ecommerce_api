@@ -10,8 +10,8 @@ import { category, product, store } from "../../controllers";
 
 const router = express.Router();
 
-router.post(
-  "/",
+router.delete(
+  "/:productId",
   requireAuth,
   requireSeller,
   [
@@ -38,21 +38,9 @@ router.post(
     } = req.body;
 
     // throws error if it is not my store
-    await store.isMyStore(+req.currentUser!.id, store_id);
-
-    const productId = await product.creatProduct({
-      name: product_name,
-      description,
-      price,
-      store_id,
-      category_id,
-      images,
-
-      variants,
-    });
-
-    res.send({ message: "new product added successfully", productId });
+    
   }
 );
 
 export default router;
+

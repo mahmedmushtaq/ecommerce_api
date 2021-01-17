@@ -1,20 +1,21 @@
 import express, { Request, Response } from "express";
-import { requireAdmin, requireAuth, validateRequest } from "../../middlewares";
 import { body } from "express-validator";
-import { category } from "../../controllers";
+import { user } from "../../controllers";
+
+import { requireAuth, requireSeller, validateRequest } from "../../middlewares";
 
 const router = express.Router();
 
-router.post(
-  "/",
+router.put(
+  "/name",
   [body("name").not().isEmpty().withMessage("name is required")],
   validateRequest,
   requireAuth,
-  requireAdmin,
+  requireSeller,
   async (req: Request, res: Response) => {
     const { name } = req.body;
-    await category.createCategory(name);
-    res.send({ message: "Category created successfully" });
+    await user.updateName(+req.currentUser!.id, name);
+    res.send({ message: "Successfully update the store" });
   }
 );
 

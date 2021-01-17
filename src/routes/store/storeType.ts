@@ -8,7 +8,7 @@ const router = express.Router();
 // first upload the image somewhere like aws s3 storage and then post the imageUrl in req body
 
 router.post(
-  "/type",
+  "/",
   [
     body("image").not().isEmpty().withMessage("Image Is Required"),
     body("store_type").not().isEmpty().withMessage("store type is required"),
@@ -28,5 +28,14 @@ router.post(
     res.send({ message: "Store Type Created Successfully" });
   }
 );
+
+router.delete("/:storeTypeId", requireAuth, requireSeller, async (req, res) => {
+  await storeType.deleteStoreType(
+    +req.params.storeTypeId,
+    +req.currentUser!.id
+  );
+
+  res.send({ message: "Store Type delete successfully" });
+});
 
 export default router;

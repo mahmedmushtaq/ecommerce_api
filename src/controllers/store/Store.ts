@@ -1,6 +1,8 @@
 import BaseController from "../BaseControllers";
 import Utils from "../../utils";
 import { BadRequestError, InternalServerError } from "../../errors";
+import { storeType } from "./StoreType";
+import { product } from "../product";
 
 class Store extends BaseController {
   async createStore(data: {
@@ -71,6 +73,63 @@ class Store extends BaseController {
       throw new BadRequestError("You are not owner of this store");
     }
     return data;
+  }
+
+  async getStoreIdFromStoreStypeId(storeTypeId: number) {
+    try {
+      const [
+        rows,
+      ]: any = this.connection!.execute(
+        "SELECT id from stores where store_type_id=?",
+        [storeTypeId]
+      );
+      return rows;
+    } catch (err) {
+      throw new InternalServerError(err);
+    }
+  }
+
+  async deleteStoresByStoreType(storeTypeId: number) {
+    try {
+      const [
+        row,
+      ]: any = await this.connection!.execute(
+        "Select id from stores where store_types_id=?",
+        [storeTypeId]
+      );
+
+      const id = row[0].id;
+      await this.deleteStoreById(id);
+      return;
+    } catch (err) {
+      throw new InternalServerError(err);
+    }
+  }
+
+  async deleteStoreById(storeId: number) {
+    try {
+      const [
+        row,
+      ]: any = await this.connection!.execute("DELETE from stores Where id=?", [
+        storeId,
+      ]);
+
+      await product.deleteProductByStoreId(storeId);
+      return;
+    } catch (err) {
+      throw new InternalServerError(err);
+    }
+  }
+
+  async updateStoreName(name: string, storeId: number) {
+    try {
+      await this.connection!.execute("Update stores set name=? where id=?", [
+        name,
+        storeId,
+      ]);
+    } catch (err) {
+      throw new InternalServerError(err);
+    }
   }
 }
 

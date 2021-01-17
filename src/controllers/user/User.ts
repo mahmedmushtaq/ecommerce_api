@@ -55,6 +55,17 @@ class User extends BaseController {
       accountType,
     };
   }
+
+  async updateName(userId: number, name: string) {
+    try {
+      await this.connection!.execute("Update users set name=? where id=?", [
+        name,
+        userId,
+      ]);
+    } catch (err) {
+      throw new InternalServerError(err);
+    }
+  }
 }
 
 const user = new User();
