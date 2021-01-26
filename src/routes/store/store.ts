@@ -22,24 +22,26 @@ router.post(
   requireSeller,
   async (req: Request, res: Response) => {
     const { name, store_image, store_types_id } = req.body;
-    await store.createStore({
+   const storeId =  await store.createStore({
       name,
       store_image,
       store_types_id,
       users_id: +req.currentUser!.id,
     });
 
-    res.send({ message: "Store Created Successfully" });
+    res.send({ message: "Store Created Successfully",storeId });
   }
 );
 
 router.get("/", requireAuth, requireSeller, async (req, res) => {
   const data = await store.storesList(+req.currentUser!.id);
+  console.log(req.currentUser!.id);
   res.send(data);
 });
 
 router.get("/all", async (req, res) => {
   const data = await store.allStores();
+
   res.send(data);
 });
 

@@ -27,20 +27,13 @@ router.delete(
   ],
   validateRequest,
   async (req: Request, res: Response) => {
-    const {
-      product_name,
-      description,
-      price,
-      store_id,
-      category_id,
-      images,
-      variants,
-    } = req.body;
+    const productId = req.params.productId;
+
+    await product.deleteProductById(+productId, +req.currentUser!.id);
+    res.send({ message: "Product Deleted Successfully" });
 
     // throws error if it is not my store
-    
   }
 );
 
 export default router;
-

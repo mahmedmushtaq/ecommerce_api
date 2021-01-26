@@ -107,7 +107,7 @@ class Order extends BaseController {
       const [
         orders,
       ]: any = await this.connection!.execute(
-        "SELECT quantity,status,payment_type,payment_status,email,stores.name as store_name, products.product_name from orders left outer join products on products.id = orders.product_id left outer join stores on stores.id=products.store_id left outer join users on users.id=orders.user_id left outer join payment_details on payment_details.id=orders.payment_details_payment_id where user_id=?",
+        "SELECT orders.id as orderId,products.id as productId,quantity,status,payment_type,payment_status,email,stores.name as store_name, products.product_name from orders left outer join products on products.id = orders.product_id left outer join stores on stores.id=products.store_id left outer join users on users.id=orders.user_id left outer join payment_details on payment_details.id=orders.payment_details_payment_id where user_id=?",
         [userId]
       );
       return orders;

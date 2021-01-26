@@ -29,6 +29,11 @@ router.post(
   }
 );
 
+router.get("/", requireAuth, requireSeller, async (req, res) => {
+  const allStoresTypes = await storeType.getAllStoreTypes(+req.currentUser!.id);
+  res.send(allStoresTypes);
+});
+
 router.delete("/:storeTypeId", requireAuth, requireSeller, async (req, res) => {
   await storeType.deleteStoreType(
     +req.params.storeTypeId,

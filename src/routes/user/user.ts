@@ -33,12 +33,11 @@ router.post(
 router.post(
   "/seller",
   requireAuth,
-  [body("userId").not().isEmpty().withMessage("userId is required")],
   validateRequest,
   async (req: Request, res: Response) => {
-    const { userId } = req.body;
+    const userId = req.currentUser!.id;
 
-    await userType.makeSeller(userId);
+    await userType.makeSeller(+userId);
     res.send({
       subscription_limit: 7,
       message: "Now, you have become a seller.",

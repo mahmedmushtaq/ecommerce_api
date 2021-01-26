@@ -14,13 +14,13 @@ router.post(
   validateRequest,
   requireAuth,
   async (req: Request, res: Response) => {
-    const {  quantity, product_id } = req.body;
-    await order.createOrder({
+    const { quantity, product_id } = req.body;
+    const orderId = await order.createOrder({
       user_id: +req.currentUser!.id,
       quantity,
       product_id,
     });
-    res.send({ message: "Successfully created the order" });
+    res.send({ message: "Successfully created the order", orderId });
   }
 );
 

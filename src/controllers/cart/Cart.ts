@@ -38,6 +38,20 @@ class Cart extends BaseController {
     }
   }
 
+  async cartProduct(usersId: number) {
+    try {
+      const [
+        rows,
+      ]: any = await this.connection!.execute(
+        "SELECT * from cart where users_id=?",
+        [usersId]
+      );
+      return rows;
+    } catch (err) {
+      throw new InternalServerError(err);
+    }
+  }
+
   async deleteProductFromCart(data: cartDataType) {
     const isProductAlreadyPresent = await this.productIsAlreadyInCart(data);
 

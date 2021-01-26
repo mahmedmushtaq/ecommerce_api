@@ -8,7 +8,7 @@ const router = express.Router();
 router.put(
   "/",
   [
-    body("status").not().isEmpty().withMessage("quantity"),
+    body("status").not().isEmpty().withMessage("status is required"),
     body("order_id").not().isEmpty().withMessage("product is required"),
   ],
   validateRequest,

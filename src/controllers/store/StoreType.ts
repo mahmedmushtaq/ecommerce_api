@@ -23,6 +23,22 @@ class StoreType extends BaseController {
     }
   }
 
+
+  async getAllStoreTypes(userId:number) {
+   
+    try {
+      const [
+        rows,
+      ]: any = await this.connection?.execute(
+        "SELECT * FROM store_types WHERE users_id=?",
+        [userId]
+      );
+      return rows;
+    } catch (err) {
+      throw new InternalServerError(err);
+    }
+  }
+
   async deleteStoreType(storeTypeId: number, userId: number) {
     // first delete product_variant record
     // delete product_image record
